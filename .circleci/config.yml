@@ -1,16 +1,37 @@
 version: 2.1
 orbs:
-  matlab: mathworks/matlab@1
-jobs:
-  build:
+  win: circleci/windows@5.0
+  matlab: mathworks/matlab@1.1.0
+
+
+executors:
+  linux: # a Linux VM running Ubuntu 20.04
     machine:
       image: ubuntu-2204:2024.01.1
+  macos: # macos executor running Xcode
+    macos:
+      xcode: 15.1.0
+    resource_class: macos.x86.medium.gen2
+  windows:
+    win/default
+
+
+jobs:
+  build:
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >> 
     steps:
       - checkout
       - matlab/install
       - matlab/run-tests:
           source-folder: code
 
-      # As an alternative to run-tests, you can use run-command to execute a MATLAB script, function, or statement.
-      # - matlab/run-command:
-      #     command: addpath('code'); results = runtests('IncludeSubfolders', true); assertSuccess(results);
+workflows:
+  tests-on-all-platforms:
+    jobs:
+      - build:
+          matrix:
+            parameters:
+              os: [linux, macos, windows]
