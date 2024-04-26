@@ -1,16 +1,68 @@
 version: 2.1
 orbs:
   matlab: mathworks/matlab@1
+<<<<<<< HEAD
 jobs:
   build:
     machine:
       image: ubuntu-2204:current
+=======
+
+executors:
+  linux: # a Linux VM running Ubuntu 20.04
+    machine:
+      image: default
+  macos: # macOS executor running Xcode
+    macos:
+      xcode: 14.2.0
+  windows:
+    resource_class: "windows.medium"
+    machine:
+      image: 'windows-server-2022-gui:current' 
+      # MATLAB installation seems to fail when we use "default" as the image name - https://app.circleci.com/pipelines/github/tsharmaMW/ci-configuration-examples/112/workflows/9a3f2117-5e4e-431e-9717-c947e08cb50c/jobs/207
+
+jobs:
+  compile-and-test-mex:
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >>
+>>>>>>> 7d2e9d99d6f1879ac0730317d0fbe30ecdd8d3bf
     steps:
       - checkout
       - matlab/install
-      - matlab/run-tests:
-          source-folder: code
+      - matlab/run-build:
+          tasks: mex test
+      - store_artifacts:
+          path: test-results/results.xml
+      - persist_to_workspace:
+          root: .
+          paths:
+            - toolbox/*.mex*
 
-      # As an alternative to run-tests, you can use run-command to execute a MATLAB script, function, or statement.
-      # - matlab/run-command:
-      #     command: addpath('code'); results = runtests('IncludeSubfolders', true); assertSuccess(results);
+  create-and-release-toolbox:
+    machine:
+      image: ubuntu-2204:2024.01.1
+    steps:
+      - checkout
+      - matlab/install
+      - attach_workspace:
+          at: .
+      - matlab/run-build:
+          tasks: packageToolbox
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go install github.com/tcnksm/ghr@latest
+            ghr -t ${GITHUB_TOKEN} -c ${CIRCLE_SHA1} -n "Cross-Platform Array Product Toolbox" <<pipeline.id>> toolbox.mltbx
+
+workflows:
+  toolbox-create-package-release:
+    jobs:
+      - compile-and-test-mex:
+          matrix:
+            parameters:
+              os: [linux, macos, windows]
+      - create-and-release-toolbox:
+          requires:
+            - compile-and-test-mex
