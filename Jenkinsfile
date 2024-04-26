@@ -14,7 +14,7 @@ pipeline {
                         agent { label "${OS}" } // Assumes you have labels corresponding to the OS types
                         steps {
                             script {
-                                matlabver = tool 'R2023b'
+                                matlabver = tool '2024a_mac_jianwei'
                                 if (isUnix()) {
                                     env.PATH = "${matlabver}/bin:${env.PATH}"   // Linux or macOS agent
                                 } else {
@@ -36,7 +36,7 @@ pipeline {
                 GITHUB_TOKEN = credentials('github-token') // Store your GitHub token as a Jenkins credential
             }
             tools {
-                matlab 'R2023b'
+                matlab '2024a_mac_jianwei'
             }
             steps {
                 script {
