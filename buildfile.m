@@ -1,21 +1,4 @@
 function plan = buildfile
-<<<<<<< HEAD
-
-% Add the source folder to the path
-addpath("code");
-
-% Create a plan
-plan = buildplan(localfunctions);
-
-% Add a task to run tests
-plan("test") = matlab.buildtool.tasks.TestTask("tests");
-
-% Make the "test" task the default task in the plan
-plan.DefaultTasks = "test";
-
-end
-
-=======
 import matlab.buildtool.tasks.TestTask;
 import matlab.buildtool.tasks.MexTask;
 
@@ -43,4 +26,3 @@ function packageToolboxTask(~)
 
     matlab.addons.toolbox.packageToolbox(opts);
 end
->>>>>>> 7d2e9d99d6f1879ac0730317d0fbe30ecdd8d3bf
