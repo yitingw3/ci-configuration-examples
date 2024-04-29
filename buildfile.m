@@ -6,7 +6,7 @@ import matlab.buildtool.tasks.MexTask;
 plan = buildplan(localfunctions);
 
 % Add a task to build a MEX file
-plan("mex") = MexTask("src/arrayProduct.c","toolbox");
+%plan("mex") = MexTask("src/arrayProduct.c","toolbox");
 
 % Add a task to run tests and generate test and coverage results
 plan("test") = TestTask(TestResults="test-results/results.xml");
