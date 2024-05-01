@@ -1,12 +1,6 @@
 version: 2.1
 orbs:
   matlab: mathworks/matlab@1
-<<<<<<< HEAD
-jobs:
-  build:
-    machine:
-      image: ubuntu-2204:current
-=======
 
 executors:
   linux: # a Linux VM running Ubuntu 20.04
@@ -27,7 +21,6 @@ jobs:
       os:
         type: executor
     executor: << parameters.os >>
->>>>>>> 7d2e9d99d6f1879ac0730317d0fbe30ecdd8d3bf
     steps:
       - checkout
       - matlab/install
