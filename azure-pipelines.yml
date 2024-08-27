@@ -19,7 +19,13 @@ steps:
       summaryFileLocation: 'code-coverage/coverage.xml'
       pathToSources: 'code/'
 
-  # As an alternative to RunMATLABTests, you can use RunMATLABCommand to execute a MATLAB script, function, or statement.
-  # - task: RunMATLABCommand@1
-  #   inputs:
-  #     command: addpath('code'); results = runtests('IncludeSubfolders', true); assertSuccess(results);
+  - task: RunMATLABCommand@1
+    inputs:
+      command: addpath('code'); results = runtests('IncludeSubfolders', true); assertSuccess(results);
+
+  - task: RunMATLABBuild@1
+    inputs:
+      tasks: test
+
+
+  

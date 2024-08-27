@@ -6,7 +6,6 @@ name: MATLAB Build
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -17,7 +16,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -34,12 +33,10 @@ jobs:
         with:
           source-folder: code
 
-      # You can use "run-build" to invoke the MATLAB build tool and run build tasks
-      #- name: Run the default "test" task in the build file
-      #   uses: matlab-actions/run-build@v2
+      - name: Run the default "test" task in the build file
+        uses: matlab-actions/run-build@v2
 
-      # You can use "run-command" to execute custom MATLAB scripts, functions, or statements
-      #- name: Run custom testing procedure
-      #  uses: matlab-actions/run-command@v2
-      #  with:
-      #    command: disp('Running my custom testing procedure!'); addpath('code'); results = runtests('IncludeSubfolders', true); assertSuccess(results);
+      - name: Run custom testing procedure
+        uses: matlab-actions/run-command@v2
+        with:
+          command: disp('Running my custom testing procedure!'); addpath('code'); results = runtests('IncludeSubfolders', true); assertSuccess(results);
