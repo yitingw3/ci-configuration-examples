@@ -1,4 +1,5 @@
-pool: maca
+pool: 
+    vmImage: ubuntu-latest
 steps:
   - task: InstallMATLAB@1
   - task: RunMATLABTests@1
