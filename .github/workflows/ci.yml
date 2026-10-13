@@ -33,6 +33,7 @@ jobs:
         uses: matlab-actions/run-tests@v3
         with:
           source-folder: code
+          test-results-junit: test-results/results.xml
 
       # You can use "run-build" to invoke the MATLAB build tool and run build tasks
       - name: Run the default "test" task in the build file
@@ -43,3 +44,11 @@ jobs:
         uses: matlab-actions/run-command@v3
         with:
           command: disp('Running my custom testing procedure!'); addpath('code'); results = runtests('IncludeSubfolders', true); assertSuccess(results);
+
+      # Upload test results as an artifact
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: test-results/
